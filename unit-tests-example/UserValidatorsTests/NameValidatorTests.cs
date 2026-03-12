@@ -13,7 +13,7 @@ public class NameValidatorTests
     {
         var nameValidator = new NameValidator();
         
-        Assert.That(() => nameValidator.IsValid(null), Throws.ArgumentNullException);
+        Assert.That(() => nameValidator.IsValid(null), Throws.ArgumentNullException, "email value can't be null");
     }
 
     [TestCaseSource(nameof(ValidNameClass))]

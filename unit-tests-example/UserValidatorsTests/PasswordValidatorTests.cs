@@ -3,7 +3,6 @@ using UserCreatorTask.UserValidators;
 
 namespace UserValidatorTests;
 
-
 [TestFixture]
 public class PasswordValidatorTests
 {
@@ -13,7 +12,7 @@ public class PasswordValidatorTests
     {
         var passwordValidator = new PasswordValidator();
         
-        Assert.That(() => passwordValidator.IsValid(null), Throws.ArgumentNullException);
+        Assert.That(() => passwordValidator.IsValid(null), Throws.ArgumentNullException, "email value can't be null");
     }
 
     [TestCaseSource(nameof(ValidPasswordClass))]

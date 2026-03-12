@@ -12,12 +12,12 @@ public class EmailValidatorTests
     {
         var emailValidator = new EmailValidator();
         
-        Assert.That(() => emailValidator.IsValid(null), Throws.ArgumentNullException);
+        Assert.That(() => emailValidator.IsValid(null), Throws.ArgumentNullException, "email value can't be null");
     }
 
     [TestCaseSource(nameof(ValidEmailClass))]
     [Parallelizable]
-    public void ValidateEmail_ShouldOk(string validEmail, string cause)
+    public void IsValid_ShouldReturnTrue_OnCorrectValue(string validEmail, string cause)
     {
         var emailValidator = new EmailValidator();
 
@@ -28,7 +28,7 @@ public class EmailValidatorTests
 
     [TestCaseSource(nameof(InvalidEmailClass))]
     [Parallelizable]
-    public void ValidateEmail_WhenWrongEmail_ShouldFail(string invalidEmail, string cause)
+    public void IsValid_ShouldReturnTrue_OnInvalidValue(string invalidEmail, string cause)
     {
         var emailValidator = new EmailValidator();
 
