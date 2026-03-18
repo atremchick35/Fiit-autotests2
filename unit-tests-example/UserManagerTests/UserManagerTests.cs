@@ -67,6 +67,8 @@ public class UserManagerTests
             .Verify(x => x.SaveUser(user), Times.Once);
         emailServiceMock
             .Verify(x => x.SendEmail(user.Name, "Welcome", "Thank you for registering!"), Times.Once);
+        userRepositoryMock
+            .Verify(x => x.DeleteUser(It.IsAny<string>()), Times.Never);
     }
 
     [Test]
@@ -75,14 +77,26 @@ public class UserManagerTests
         var user = new User("Jonn", "passwd", "email", 21);
         userValidatorMock
             .Setup(x => x.Validate(It.IsAny<User>()))
-            .Returns((false, "error"));
+            .Returns((false, "Validation failed - age or email invalid"));
 
-        var exception = Assert.Throws<InvalidUserException>(() => userManager.CreateNewUser(user));
-        Assert.AreEqual("error", exception!.Message);
+        var exception = Assert.Throws<InvalidUserException>(() => 
+            userManager.CreateNewUser(user));
+        Assert.AreEqual("Validation failed - age or email invalid", exception!.Message);
         userValidatorMock
             .Verify(x => x.Validate(user), Times.Once);
+        userRepositoryMock
+            .Verify(x => x.GetUser(It.IsAny<string>()), Times.Never);
+        userRepositoryMock
+            .Verify(x => x.SaveUser(It.IsAny<User>()), Times.Never);
+        emailServiceMock
+            .Verify(x => x.SendEmail(
+                    It.IsAny<string>(), 
+                    It.IsAny<string>(), 
+                    It.IsAny<string>()), 
+                Times.Never);
+        userRepositoryMock
+            .Verify(x => x.DeleteUser(It.IsAny<string>()), Times.Never);
     }
-
     [Test]
     public void CreateNewUser_WhenUserAlreadyExists_ShouldFail()
     {
@@ -99,6 +113,11 @@ public class UserManagerTests
             .Verify(x => x.Validate(user), Times.Once());
         userRepositoryMock
             .Verify(x => x.GetUser(user.Email), Times.Once);
+        userRepositoryMock
+            .Verify(x => x.DeleteUser(It.IsAny<string>()), Times.Never);
+        userRepositoryMock
+            .Verify(x => x.SaveUser(It.IsAny<User>()), Times.Never);
+
         Assert.AreEqual("UserAlreadyExists", exception!.Message);
     }
 
@@ -128,6 +147,8 @@ public class UserManagerTests
             .Verify(x => x.DeleteUser(user.Email), Times.Once);
         emailServiceMock
             .Verify(x => x.SendEmail(user.Name, "Goodbye", "Your account has been deleted."), Times.Once);
+        userRepositoryMock
+            .Verify(x => x.SaveUser(It.IsAny<User>()), Times.Never);
     }
 
     [Test]
