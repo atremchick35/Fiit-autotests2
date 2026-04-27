@@ -6,11 +6,12 @@ public class BookBuilder
 {
     private string? name;
     private string? author;
+    private string? description;
     private int? id;
     private bool isDeleted;
     private int rubricId = 1;
     private int imageId = 1;
-    private int? price;
+    private string? price;
 
     public BookBuilder WithName(string? name)
     {
@@ -21,6 +22,12 @@ public class BookBuilder
     public BookBuilder WithAuthor(string author)
     {
         this.author = author;
+        return this;
+    }
+
+    public BookBuilder WithDescription(string description)
+    {
+        this.description = description;
         return this;
     }
 
@@ -48,15 +55,22 @@ public class BookBuilder
         return this;
     }
 
+    public BookBuilder WithPrice(string price)
+    {
+        this.price = price;
+        return this;
+    }
+
     public Book Build() => new()
     {
         Name = name ?? $"Default_name{IntGenerator.Get()}",
         Author = author ?? $"Default_author{IntGenerator.Get()}",
         Id = id ?? IntGenerator.Get(),
-        Description = "",
+        Description = description ?? "",
         IsDeleted = isDeleted,
         RubricId = rubricId,
         ImageId = imageId,
-        Count = 1
+        Count = 1,
+        Price = price
     };
 }
