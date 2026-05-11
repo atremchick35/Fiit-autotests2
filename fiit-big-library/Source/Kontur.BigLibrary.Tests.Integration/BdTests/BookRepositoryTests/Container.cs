@@ -16,6 +16,7 @@ public class Container
         _collection.AddSingleton<IDbConnectionFactory>(x => new DbConnectionFactory(DbHelper.ConnectionString));
         _collection.AddSingleton<IBookRepository, BookRepository>();
         _collection.AddTransient<BookBuilder>();
+        _collection.AddTransient<ReaderBuilder>();
     }
 
     public IServiceProvider Build()
